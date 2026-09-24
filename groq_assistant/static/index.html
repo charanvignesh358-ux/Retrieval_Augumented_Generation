@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1020;--panel:rgba(18,25,48,.78);--line:rgba(160,175,220,.18);--ink:#e8ecf8;--mute:#8d98bd;--hit:#ffb454;--user:#26315c;--focus:#7aa2ff}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 Inter,system-ui,sans-serif;overflow:hidden}
+#scene{position:fixed;inset:0;z-index:0}
+.app{position:relative;z-index:1;height:100%;display:grid;grid-template-columns:280px 1fr;gap:16px;padding:16px;max-width:1200px;margin:auto}
+.card{background:var(--panel);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px}
+aside{padding:18px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+h1{font:700 22px/1.2 Fraunces,Georgia,serif;margin:0}
+.sub{color:var(--mute);font-size:13px;margin:0}
+.drop{border:1.5px dashed var(--line);border-radius:10px;padding:18px;text-align:center;color:var(--mute);cursor:pointer;transition:.2s}
+.drop:hover,.drop.on{border-color:var(--hit);color:var(--ink)}
+#docs{list-style:none;margin:0;padding:0;overflow:auto;display:flex;flex-direction:column;gap:6px}
+#docs li{display:flex;justify-content:space-between;gap:8px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.04);font-size:13px}
+#docs li span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#docs button{background:none;border:0;color:var(--mute);cursor:pointer;font-size:16px}
+#docs button:hover{color:var(--hit)}
+main{display:flex;flex-direction:column;min-height:0}
+#chat{flex:1;overflow:auto;padding:22px;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:82%;padding:12px 15px;border-radius:14px;white-space:pre-wrap;animation:in .25s ease-out}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.me{align-self:flex-end;background:var(--user);border-bottom-right-radius:4px}
+.bot{align-self:flex-start;background:rgba(255,255,255,.06);border:1px solid var(--line);border-bottom-left-radius:4px}
+.cite{color:var(--hit);font-size:12.5px}
+.srcs{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12px;padding:3px 9px;border-radius:99px;border:1px solid var(--hit);color:var(--hit);background:none;cursor:pointer}
+.chip:hover{background:rgba(255,180,84,.14)}
+.excerpt{margin-top:8px;font-size:12.5px;color:var(--mute);border-left:2px solid var(--hit);padding-left:10px;display:none}
+.meta{font-size:11.5px;color:var(--mute);margin-top:8px}
+.empty{margin:auto;text-align:center;color:var(--mute);max-width:360px}
+form{display:flex;gap:10px;padding:14px;border-top:1px solid var(--line)}
+input[type=text]{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--ink);font:inherit}
+button.send{background:var(--hit);color:#1b1305;border:0;border-radius:10px;padding:0 20px;font:500 15px Inter;cursor:pointer}
+button.send:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media(max-width:760px){.app{grid-template-columns:1fr;grid-template-rows:auto 1fr}aside{max-height:190px}}
+@media(prefers-reduced-motion:reduce){.msg{animation:none}}
+#login{position:fixed;inset:0;z-index:5;display:none;align-items:center;justify-content:center;background:rgba(11,16,32,.72);backdrop-filter:blur(6px)}
+#login form{flex-direction:column;width:min(340px,90vw);padding:26px;border:1px solid var(--line);border-radius:14px;background:#121930}
+#login label{font-size:13px;color:var(--mute);display:block}
+#lerr{color:var(--hit);font-size:13px;min-height:18px}
+body.user #docs button{display:none}
+#who{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute)}
+</style>
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div id="login" role="dialog" aria-modal="true" aria-label="Log in">
+  <form id="lform">
+    <h1>Log in</h1>
+    <label>Username<input type="text" id="lu" autocomplete="username" required style="width:100%;margin-top:4px"></label>
+    <label>Password<input type="password" id="lp" autocomplete="current-password" required style="width:100%;margin-top:4px;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:12px 14px;color:var(--ink);font:inherit"></label>
+    <div id="lerr" role="alert"></div>
+    <button class="send" style="padding:12px">Log in</button>
+  </form>
+</div>
+<div class="app">
+  <aside class="card">
+    <div><h1>Document Assistant</h1><p class="sub">Answers come only from the files you upload.</p></div>
+    <label class="drop" id="drop" tabindex="0">Drop PDF, DOCX or TXT here, or click to choose
+      <input id="file" type="file" accept=".pdf,.docx,.txt,.md,.csv,.log,.png,.jpg,.jpeg" multiple hidden></label>
+    <div id="who"><span id="whoname"></span><button class="chip" id="out">Log out</button></div>
+    <div id="status" class="sub" role="status"></div>
+    <ul id="docs" aria-label="Indexed documents"></ul>
+  </aside>
+  <main class="card">
+    <div id="chat" aria-live="polite">
+      <div class="empty" id="empty"><b>Upload a document, then ask a question.</b><br>Try “What is the leave policy?” Retrieved passages light up in the 3D field behind you.</div>
+    </div>
+    <form id="form">
+      <input type="text" id="q" placeholder="Ask about your documents" aria-label="Question" autocomplete="off" required>
+      <button class="send" id="send">Ask</button>
+    </form>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- 3D vector field: each point = a chunk embedding ---------- */
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(55,1,.1,100); cam.position.z=9;
+const N=700, pos=new Float32Array(N*3), col=new Float32Array(N*3), base=new Float32Array(N*3);
+const cool=new THREE.Color(0x5b74c9), hot=new THREE.Color(0xffb454);
+for(let i=0;i<N;i++){
+  const r=3+Math.random()*4, t=Math.random()*6.283, p=Math.acos(2*Math.random()-1);
+  pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.sin(p)*Math.sin(t)*.7; pos[i*3+2]=r*Math.cos(p);
+  cool.toArray(col,i*3);
+}
+base.set(pos);
+const geo=new THREE.BufferGeometry();
+geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+const pts=new THREE.Points(geo,new THREE.PointsMaterial({size:.07,vertexColors:true,transparent:true,opacity:.9}));
+scene.add(pts);
+let lit=[]; // indices highlighted, with pulse
+function light(k){
+  for(let i=0;i<N;i++) cool.toArray(col,i*3);
+  lit=[]; for(let j=0;j<k;j++) lit.push(Math.floor(Math.random()*N));
+  lit.forEach(i=>hot.toArray(col,i*3)); geo.attributes.color.needsUpdate=true; pulse=1;
+}
+let pulse=0, mx=0, reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+addEventListener('pointermove',e=>mx=(e.clientX/innerWidth-.5));
+function size(){renderer.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+addEventListener('resize',size); size();
+(function loop(t){
+  requestAnimationFrame(loop);
+  if(!reduce){pts.rotation.y=t*.00008+mx*.4; pts.rotation.x=Math.sin(t*.0002)*.15}
+  if(pulse>0){ // lit points drift toward the centre, like being pulled into the prompt
+    lit.forEach(i=>{for(let a=0;a<3;a++){const b=base[i*3+a];pos[i*3+a]=b*(1-.55*Math.sin(Math.min(1,1-pulse)*Math.PI)) }});
+    geo.attributes.position.needsUpdate=true; pulse=Math.max(0,pulse-.012);
+  }
+  renderer.render(scene,cam);
+})(0);
+
+/* ---------- app ---------- */
+const $=id=>document.getElementById(id), chat=$('chat'), status=$('status');
+
+/* ---------- auth ---------- */
+let token=sessionStorage.getItem('tok'), role=sessionStorage.getItem('role'), uname=sessionStorage.getItem('user');
+async function api(url,o={}){
+  o.headers={...(o.headers||{}),Authorization:'Bearer '+token};
+  const r=await fetch(url,o); if(r.status===401) showLogin(); return r;
+}
+function showLogin(){token=null;sessionStorage.clear();$('login').style.display='flex';$('lu').focus()}
+function enter(){
+  $('login').style.display='none'; document.body.classList.toggle('user',role!=='admin');
+  $('drop').style.display=role==='admin'?'':'none'; $('whoname').textContent=uname+' ('+role+')'; loadDocs();
+}
+$('out').onclick=showLogin;
+$('lform').onsubmit=async e=>{
+  e.preventDefault();
+  const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('lu').value,password:$('lp').value})});
+  const j=await r.json(); if(!r.ok){$('lerr').textContent=j.detail;return}
+  token=j.token;role=j.role;uname=j.user;
+  sessionStorage.setItem('tok',token);sessionStorage.setItem('role',role);sessionStorage.setItem('user',uname);
+  $('lp').value='';$('lerr').textContent='';enter();
+};
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function add(cls,html){$('empty')&&$('empty').remove();const d=document.createElement('div');d.className='msg '+cls;d.innerHTML=html;chat.append(d);chat.scrollTop=chat.scrollHeight;return d}
+
+async function loadDocs(){
+  const r=await api('/api/sources'); if(!r.ok)return; const list=await r.json(); const ul=$('docs'); ul.innerHTML='';
+  list.forEach(d=>{const li=document.createElement('li');
+    li.innerHTML=`<span title="${esc(d.source)}">${esc(d.source)}</span><span>${d.chunks} <button aria-label="Remove ${esc(d.source)}">×</button></span>`;
+    li.querySelector('button').onclick=async()=>{await api('/api/sources/'+encodeURIComponent(d.source),{method:'DELETE'});loadDocs()};
+    ul.append(li)});
+}
+async function upload(files){
+  for(const f of files){
+    status.textContent=`Indexing ${f.name}…`;
+    const fd=new FormData(); fd.append('file',f);
+    const r=await api('/api/upload',{method:'POST',body:fd}); const j=await r.json();
+    status.textContent=r.ok?`${f.name}: ${j.chunks} passages indexed.`:`${f.name}: ${j.detail||'upload failed'}`;
+  }
+  loadDocs();
+}
+const drop=$('drop'), fileIn=$('file');
+fileIn.onchange=()=>upload(fileIn.files);
+drop.onkeydown=e=>{if(e.key==='Enter')fileIn.click()};
+['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('on')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('on')}));
+drop.addEventListener('drop',e=>upload(e.dataTransfer.files));
+
+$('form').onsubmit=async e=>{
+  e.preventDefault(); const q=$('q').value.trim(); if(!q)return;
+  $('q').value=''; add('me',esc(q)); $('send').disabled=true;
+  const wait=add('bot','Searching your documents…');
+  try{
+    const r=await api('/api/query',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+    const j=await r.json(); if(!r.ok) throw new Error(j.detail||'Request failed');
+    const ans=esc(j.answer).replace(/\[Source:[^\]]+\]/g,m=>`<span class="cite">${m}</span>`);
+    const graphHtml=(j.graph||[]).slice(0,6).map(g=>`<div class="chip" style="display:inline-block;margin:6px 6px 0 0;">${esc(g.source)} ${esc(g.relation)} ${esc(g.target)}</div>`).join('');
+    const chips=j.sources.map((s,i)=>`<button class="chip" data-i="${i}">${esc(s.source)} p.${s.page}</button><div class="excerpt" id="ex${i}">${esc(s.excerpt)}…</div>`).join('');
+    const graphStatus = j.graph && j.graph.length ? 'Graph facts extracted' : 'No graph facts yet';
+    const graphBlock=graphHtml?`<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08);"><div style="font-size:12px;color:var(--mute);margin-bottom:6px;">${graphStatus}</div>${graphHtml}</div>`:`<div style="margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08);"><div style="font-size:12px;color:var(--mute);margin-bottom:6px;">Neo4j live graph is not connected yet. Add NEO4J_URI, NEO4J_USER, and NEO4J_PASSWORD to enable it.</div></div>`;
+    wait.innerHTML=`${ans}<div class="srcs">${chips}</div>${graphBlock}<div class="meta">${j.latency_ms} ms · ${j.sources.length} passages retrieved</div>`;
+    wait.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const x=wait.querySelector('#ex'+b.dataset.i);if(x){x.style.display=x.style.display==='block'?'none':'block'}});
+    light(j.sources.length*6);
+  }catch(err){wait.textContent=err.message}
+  $('send').disabled=false; chat.scrollTop=chat.scrollHeight;
+};
+token?enter():showLogin();
+</script>
+</body>
+</html>
