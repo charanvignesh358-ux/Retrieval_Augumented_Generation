@@ -9,75 +9,82 @@
     <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" />
   </a>
   <a href="https://fastapi.tiangolo.com/">
-    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-Advanced-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
   </a>
   <a href="https://groq.com/">
     <img alt="Groq" src="https://img.shields.io/badge/Groq-AI%20Inference-FB7C0F?style=for-the-badge" />
   </a>
   <a href="https://www.trychroma.com/">
-    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-Vector%20DB-8B5CF6?style=for-the-badge" />
+    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-Vector%20Search-8B5CF6?style=for-the-badge" />
+  </a>
+  <a href="https://www.apache.org/licenses/LICENSE-2.0">
+    <img alt="License" src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
   </a>
 </p>
 
-A production-style local document Q&A system that lets you upload PDFs, text files, and images, then ask natural-language questions and get grounded answers from your own content.
+A local AI document assistant for asking questions from PDFs, text files, and uploaded knowledge sources. The application combines retrieval-augmented generation, semantic search, and a simple browser interface to make document Q&A fast and usable.
 
-## Why this project
+## Overview
 
-This app is designed for fast local RAG workflows using:
+This project was built to help users:
+
+- upload important documents
+- search within them using embeddings
+- ask natural-language questions
+- receive responses grounded in the source content
+- use the system locally without needing a heavy enterprise stack
+
+## Tech stack
+
+- Python
+- FastAPI
+- Groq LLM APIs
+- ChromaDB for vector search
+- OCR support for scanned PDFs and images
+- HTML + JavaScript frontend
+
+## Key features
 
 - PDF, DOCX, TXT, and image ingestion
-- local vector search with ChromaDB
-- Groq-based answer generation grounded in retrieved context
-- a simple browser UI for non-technical users
-- graph-style extraction for richer document understanding
+- Local semantic retrieval with embeddings
+- Groq-powered answer generation grounded in context
+- Login and user access flow
+- Document upload and chat workflow in the browser
+- Graph-style relationship extraction support for richer document understanding
 
-## Core features
-
-- Smart document ingestion for PDF, DOCX, TXT, and image files
-- Context-aware question answering from uploaded documents
-- Fast local semantic retrieval using embeddings
-- Clean web interface with login, upload, and chat flow
-- Optional graph-based relationship extraction for document insight
-- Lightweight deployment for demos, labs, and internal tools
-
-## Screenshots
+## Demo preview
 
 ### Login screen
 
-<img src="docs/assets/login-screen.svg" alt="Login screen" width="80%" />
+<img src="docs/assets/login-screen.svg" alt="Login screen preview" width="80%" />
 
-### RAG chat interface
+### Chat workflow
 
-<img src="docs/assets/chat-screen.svg" alt="RAG chat interface" width="80%" />
+<img src="docs/assets/chat-screen.svg" alt="Chat preview" width="80%" />
 
 ## Quick start
 
-### 1. Create a virtual environment
+### 1. Clone and set up the environment
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
-```
-
-### 2. Install dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure environment variables
+### 2. Configure your environment
 
 ```bash
 copy .env.example .env
 ```
 
-Then update the file with values such as:
+Update the values inside `.env` with your keys and app settings, including:
 
 - GROQ_API_KEY
 - APP_USERS
 - SECRET_KEY
 
-### 4. Run the app
+### 3. Run the application
 
 ```bash
 cd groq_assistant
@@ -90,9 +97,9 @@ Then open:
 http://127.0.0.1:8000/
 ```
 
-## Default credentials
+## Example credentials
 
-Example local login values:
+The app includes local sample credentials such as:
 
 - admin / admin123
 - staff / staff123
@@ -101,27 +108,35 @@ Example local login values:
 
 ```text
 RAG/
-├── groq_assistant/        # main web app and frontend
-├── rag_system/            # reusable backend RAG services
+├── groq_assistant/        # main app + frontend
+├── rag_system/            # backend RAG logic
+├── docs/assets/           # banner and UI screenshots
 ├── .env.example           # environment template
+├── .gitignore             # repo hygiene rules
 ├── requirements.txt       # Python dependencies
-├── README.md              # project landing page
-├── SETUP_GUIDE.md         # setup instructions
-├── QUICK_REFERENCE.md     # quick usage notes
-└── run.bat                # Windows launcher
+├── README.md              # portfolio-style landing page
+├── Dockerfile             # optional container setup
+├── run.bat                # Windows launcher
+└── app.py                 # entry point for local app
 ```
+
+## Use cases
+
+- research document Q&A
+- internal knowledge assistant
+- PDF-based support chatbot
+- prototype enterprise RAG workflows
 
 ## Notes
 
-- This project is tuned for local deployment and experimentation.
-- For production use, add proper security controls, HTTPS, and secret management.
-- The app can be extended with user-level permissions, database storage, and stronger monitoring.
+- This project is optimized for local usage and demos.
+- For production deployment, add HTTPS, a proper auth layer, secrets management, and user-level access control.
 
 ## License
 
-This repository is intended primarily for educational, prototyping, and demo use.
+This project is intended for educational, prototype, and portfolio use.
 
 ## Contact
 
-Use the GitHub issues page for questions, feature requests, or deployment support.
+For questions, feature requests, or collaboration opportunities, open an issue in the repository.
 
