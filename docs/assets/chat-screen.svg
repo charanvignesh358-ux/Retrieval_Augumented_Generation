@@ -1,0 +1,23 @@
+<svg width="1280" height="760" viewBox="0 0 1280 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="760" fill="#EFF6FF"/>
+  <rect x="80" y="70" width="1120" height="620" rx="26" fill="#FFFFFF" stroke="#DBEAFE" stroke-width="2"/>
+  <rect x="110" y="100" width="1060" height="72" rx="18" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <text x="145" y="145" fill="#0F172A" font-family="Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Upload &amp; Ask</text>
+  <rect x="145" y="202" width="420" height="310" rx="18" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <rect x="176" y="235" width="224" height="18" rx="9" fill="#93C5FD"/>
+  <rect x="176" y="270" width="188" height="16" rx="8" fill="#CBD5E1"/>
+  <rect x="176" y="308" width="210" height="16" rx="8" fill="#CBD5E1"/>
+  <rect x="176" y="345" width="130" height="36" rx="12" fill="#2563EB"/>
+  <text x="205" y="368" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Upload PDF</text>
+  <rect x="620" y="202" width="510" height="308" rx="18" fill="#0F172A"/>
+  <text x="650" y="250" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">Question</text>
+  <rect x="650" y="280" width="430" height="24" rx="12" fill="#1E293B"/>
+  <rect x="650" y="325" width="230" height="18" rx="9" fill="#38BDF8" opacity="0.8"/>
+  <text x="650" y="395" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="600">Answer</text>
+  <rect x="650" y="420" width="410" height="54" rx="14" fill="#111827" stroke="#334155"/>
+  <text x="670" y="454" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="20">Grounded response from uploaded document context</text>
+  <rect x="180" y="560" width="900" height="84" rx="18" fill="#F8FAFC" stroke="#E2E8F0"/>
+  <rect x="210" y="586" width="620" height="22" rx="11" fill="#E2E8F0"/>
+  <rect x="860" y="578" width="170" height="40" rx="12" fill="#22C55E"/>
+  <text x="910" y="605" fill="#FFFFFF" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700">Ask</text>
+</svg>

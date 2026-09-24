@@ -1,100 +1,127 @@
 # Retrieval-Augmented Generation (RAG) Assistant
 
-A local document Q&A web app built for PDF and text-based knowledge retrieval using FastAPI, Groq, and ChromaDB. It lets users upload documents, ask questions in natural language, and receive grounded answers generated from the uploaded content.
+<div align="center">
+  <img src="docs/assets/project-banner.svg" alt="RAG Document Assistant banner" width="100%" />
+</div>
 
-## Features
+<p align="center">
+  <a href="https://www.python.org/">
+    <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" />
+  </a>
+  <a href="https://fastapi.tiangolo.com/">
+    <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white" />
+  </a>
+  <a href="https://groq.com/">
+    <img alt="Groq" src="https://img.shields.io/badge/Groq-AI%20Inference-FB7C0F?style=for-the-badge" />
+  </a>
+  <a href="https://www.trychroma.com/">
+    <img alt="ChromaDB" src="https://img.shields.io/badge/ChromaDB-Vector%20DB-8B5CF6?style=for-the-badge" />
+  </a>
+</p>
 
-- PDF, DOCX, TXT, and image-based document ingestion
-- Local vector search with ChromaDB
-- Groq-powered answer generation grounded in retrieved context
-- Browser-based chat interface
-- Optional graph-style relationship extraction for document insights
-- Simple authentication and local deployment setup
+A production-style local document Q&A system that lets you upload PDFs, text files, and images, then ask natural-language questions and get grounded answers from your own content.
 
-## Tech Stack
+## Why this project
 
-- Python
-- FastAPI
-- ChromaDB
-- Groq API
-- pypdf / python-docx / OCR support
-- HTML + JavaScript frontend
+This app is designed for fast local RAG workflows using:
 
-## Project Structure
+- PDF, DOCX, TXT, and image ingestion
+- local vector search with ChromaDB
+- Groq-based answer generation grounded in retrieved context
+- a simple browser UI for non-technical users
+- graph-style extraction for richer document understanding
 
-- groq_assistant/ — main web application and UI
-- rag_system/ — backend RAG components
-- requirements.txt — Python dependencies
-- .env.example — sample environment variables
+## Core features
 
-## Quick Start
+- Smart document ingestion for PDF, DOCX, TXT, and image files
+- Context-aware question answering from uploaded documents
+- Fast local semantic retrieval using embeddings
+- Clean web interface with login, upload, and chat flow
+- Optional graph-based relationship extraction for document insight
+- Lightweight deployment for demos, labs, and internal tools
 
-1. Create and activate a virtual environment
+## Screenshots
 
-   ```bash
-   python -m venv .venv
-   .venv\Scripts\activate
-   ```
+### Login screen
 
-2. Install dependencies
+<img src="docs/assets/login-screen.svg" alt="Login screen" width="80%" />
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### RAG chat interface
 
-3. Configure environment variables
+<img src="docs/assets/chat-screen.svg" alt="RAG chat interface" width="80%" />
 
-   Copy the sample file and update it with your keys:
+## Quick start
 
-   ```bash
-   copy .env.example .env
-   ```
+### 1. Create a virtual environment
 
-   Then set values such as:
-   - GROQ_API_KEY
-   - APP_USERS
-   - SECRET_KEY
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
 
-4. Start the app
+### 2. Install dependencies
 
-   ```bash
-   cd groq_assistant
-   python app.py
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-5. Open the app in a browser
+### 3. Configure environment variables
 
-   ```text
-   http://127.0.0.1:8000/
-   ```
+```bash
+copy .env.example .env
+```
 
-## Default Login
+Then update the file with values such as:
 
-The app includes a local login system. Example credentials:
+- GROQ_API_KEY
+- APP_USERS
+- SECRET_KEY
+
+### 4. Run the app
+
+```bash
+cd groq_assistant
+python app.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8000/
+```
+
+## Default credentials
+
+Example local login values:
 
 - admin / admin123
 - staff / staff123
 
-You can change these in the environment configuration.
+## Project structure
 
-## Supported Files
-
-- PDF
-- DOCX
-- TXT
-- JPG / PNG images
+```text
+RAG/
+├── groq_assistant/        # main web app and frontend
+├── rag_system/            # reusable backend RAG services
+├── .env.example           # environment template
+├── requirements.txt       # Python dependencies
+├── README.md              # project landing page
+├── SETUP_GUIDE.md         # setup instructions
+├── QUICK_REFERENCE.md     # quick usage notes
+└── run.bat                # Windows launcher
+```
 
 ## Notes
 
-- This project is designed for local use and experimentation.
-- It is best suited for personal, academic, or prototype deployment.
-- For production use, add proper secrets management, HTTPS, and user-level access control.
+- This project is tuned for local deployment and experimentation.
+- For production use, add proper security controls, HTTPS, and secret management.
+- The app can be extended with user-level permissions, database storage, and stronger monitoring.
 
 ## License
 
-This project is intended for educational and demonstration purposes.
+This repository is intended primarily for educational, prototyping, and demo use.
 
 ## Contact
 
-For project questions, custom enhancements, or deployment help, please reach out through the repository issues or project maintainer contact.
+Use the GitHub issues page for questions, feature requests, or deployment support.
 

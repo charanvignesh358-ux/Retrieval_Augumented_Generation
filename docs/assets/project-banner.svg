@@ -1,0 +1,31 @@
+<svg width="1400" height="420" viewBox="0 0 1400 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1400" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F172A"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="0.5" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+  </defs>
+  <rect width="1400" height="420" rx="24" fill="url(#bg)"/>
+  <circle cx="1170" cy="110" r="180" fill="url(#accent)" opacity="0.14"/>
+  <circle cx="1230" cy="330" r="200" fill="#38BDF8" opacity="0.08"/>
+  <rect x="90" y="75" width="220" height="220" rx="30" fill="#0B1220" stroke="#1E293B"/>
+  <rect x="120" y="110" width="160" height="24" rx="12" fill="#38BDF8" opacity="0.8"/>
+  <rect x="120" y="150" width="132" height="18" rx="9" fill="#E2E8F0" opacity="0.75"/>
+  <rect x="120" y="182" width="140" height="18" rx="9" fill="#E2E8F0" opacity="0.45"/>
+  <rect x="120" y="214" width="112" height="18" rx="9" fill="#E2E8F0" opacity="0.3"/>
+  <rect x="120" y="250" width="68" height="24" rx="12" fill="#22C55E" opacity="0.8"/>
+  <path d="M450 125H980" stroke="#334155" stroke-width="2" stroke-linecap="round"/>
+  <text x="430" y="170" fill="#F8FAFC" font-family="Segoe UI, Arial, sans-serif" font-size="52" font-weight="700">RAG Document Assistant</text>
+  <text x="430" y="225" fill="#CBD5E1" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="500">Ask questions from PDFs, text, and uploaded knowledge sources</text>
+  <rect x="430" y="255" width="176" height="54" rx="14" fill="url(#accent)"/>
+  <text x="470" y="290" fill="#020617" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Python</text>
+  <rect x="625" y="255" width="184" height="54" rx="14" fill="#111827" stroke="#334155"/>
+  <text x="664" y="290" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">FastAPI</text>
+  <rect x="835" y="255" width="214" height="54" rx="14" fill="#111827" stroke="#334155"/>
+  <text x="872" y="290" fill="#E2E8F0" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700">Groq + Chroma</text>
+</svg>
